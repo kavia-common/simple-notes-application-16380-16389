@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Simple Notes Frontend (Next.js)
 
-## Getting Started
+Minimalistic light-themed notes UI with:
+- User authentication (email/password)
+- View, create, edit, delete notes
+- Search notes
+- Top navbar, left notes list, right detail/edit view
+- Floating action button for quick create
 
-First, run the development server:
+## Requirements
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Create an `.env.local` file based on `.env.example` and set:
+- `NEXT_PUBLIC_API_BASE_URL` — base URL of the backend REST API
+- `NEXT_PUBLIC_SITE_URL` — the site origin, used for auth redirect if backend requires it
+
+Example:
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The frontend talks to the following backend endpoints (assumed to exist):
+- POST /auth/register { email, password, emailRedirectTo? }
+- POST /auth/login { email, password } -> { accessToken, refreshToken? }
+- GET /notes?q=...
+- GET /notes/:id
+- POST /notes
+- PUT /notes/:id
+- DELETE /notes/:id
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Tokens are stored in localStorage and sent as Authorization: Bearer <accessToken>.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Development
 
-## Learn More
+Install deps and run:
+```
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open http://localhost:3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Build and Start
+```
+npm run build
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- All API URLs are read from environment variables; do not hardcode them.
+- The UI uses plain CSS classes plus Tailwind base for resets and utilities.
+- If your backend uses different endpoints or payloads, adjust `src/lib/api.ts` accordingly.
